@@ -6,7 +6,7 @@ from scipy.fftpack import fft, fftfreq
 
 def cqRealTime(real_time_file,dipole_direction,kick_strength,damp_const):    
     '''
-        (C) Joshua Goings 2016
+        (C) Joshua Goings 2016, Modified by Torin Stetina 2018
         
         CQ_RealTime.py: a post-processing script for computing the absorption spectrum of
          Real Time Time Dependent SCF jobs in Chronus Quantum
@@ -21,7 +21,8 @@ def cqRealTime(real_time_file,dipole_direction,kick_strength,damp_const):
     '''
    
     # chronusq file is CSV, also skip the header (first row)
-    rt = np.genfromtxt(real_time_file,skip_header=1,delimiter=',')
+    #rt = np.genfromtxt(real_time_file,skip_header=1,delimiter=',')
+    rt = np.genfromtxt(real_time_file,skip_header=0,delimiter=',')
 
     length = len(rt) 
 
@@ -39,7 +40,8 @@ def cqRealTime(real_time_file,dipole_direction,kick_strength,damp_const):
     t      = rt[:int(length),0] 
 
     # note 'z' is just generic dipole direction, converted from debye to au
-    z      = rt[:int(length),direction]*0.393456 
+    #z      = rt[:int(length),direction]*0.393456 
+    z      = rt[:int(length),direction] 
 
     # scale dipole signal  
     z0 = z[0]
@@ -79,6 +81,7 @@ def cqRealTime(real_time_file,dipole_direction,kick_strength,damp_const):
     w = (w*27.2114)    # give frequencies in eV
     return w, S
 
+'''
 if __name__ == '__main__':
 
     xFilename   = 'h2o_x_RealTime_Dipole.csv'
@@ -87,7 +90,6 @@ if __name__ == '__main__':
     
     kick        = 0.0001 # depends on system
     damping     = 150.0  # anywhere between 50-250 usually works well
-    doCS        = False  # if True, do compressed sensing technique
    
     w, Sxx      = cqRealTime(xFilename,'x',kick,damping)
     w, Syy      = cqRealTime(yFilename,'y',kick,damping)
@@ -103,4 +105,4 @@ if __name__ == '__main__':
     plt.ylabel(' Intensity / arbitrary units ')
     plt.show()
     #plt.savefig('h2o_absorption.pdf')
-
+'''
